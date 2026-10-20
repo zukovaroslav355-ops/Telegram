@@ -1,0 +1,21 @@
+name: Build MechaGram
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Build APK
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          chmod +x ./gradlew
+          ./gradlew :TMessagesProj:assembleAfatRelease
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: MechaGram-APK
+          path: TMessagesProj/build/outputs/apk/afat/release/*.apk
